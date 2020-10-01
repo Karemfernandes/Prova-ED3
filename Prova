@@ -1,0 +1,127 @@
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+class Aluno
+{
+private:
+    string nome;
+    double nota;
+    double percentual;
+
+public:
+    Aluno()
+    {
+    }
+
+    Aluno(string _nome, double _nota)
+    {
+        nome = _nome;
+        nota = _nota;
+    }
+
+    bool operator==(const Aluno &p) const
+    {
+        return nome == p.nome;
+    }
+
+    void AlteraPercentual(double perc)
+    {
+        percentual = perc;
+    }
+
+    void imprimir()
+    {
+        cout << "Nome: " << nome << "  |  ";
+        cout << "Percentual: " << percentual << "  |  ";
+        cout << "Nota Final:" << nota + (nota * percentual) << "\n";
+    }
+};
+
+void pontoExtra(list<Aluno> &alunos)
+{
+    int contador = 0;
+
+    for (auto &item : alunos)
+    {
+        if (contador <= 2)
+        {
+            item.AlteraPercentual(0.1 - (0.025 * contador));
+        }
+        else
+        {
+            item.AlteraPercentual(0);
+        }
+        contador++;
+    }
+}
+
+void cadastraAluno(list<Aluno> &alunos)
+{
+    string nome;
+    double nota;
+    double percentual;
+    Aluno aux;
+
+    cout << "Digite o nome do Aluno: ";
+    cin >> nome;
+    cout << "Digite a nota: ";
+    cin >> nota;
+
+    aux = Aluno(nome, nota);
+
+    alunos.push_front(aux);
+    pontoExtra(alunos);
+}
+
+void removeAluno(list<Aluno> &alunos)
+{
+    string nome;
+    Aluno aux;
+    cout << "Digite o nome: ";
+    cin >> nome;
+
+    aux = Aluno(nome, 0);
+    alunos.remove(aux);
+    pontoExtra(alunos);
+}
+
+void imprimeAluno(list<Aluno> aluno)
+{
+    for (auto item : aluno)
+    {
+        item.imprimir();
+    }
+}
+
+int main()
+{
+    list<Aluno> salaDeAula;
+    char opcao;
+
+    do
+    {
+        cout << "\t\tMenu\n\n";
+        cout << "1 Cadastrar Aluno\n";
+        cout << "2 Remover Aluno\n";
+        cout << "3 Imprimir \n";
+        cout << "4 Sair\n";
+        cin >> opcao;
+        switch (opcao)
+        {
+        case '1':
+            cadastraAluno(salaDeAula);
+            break;
+        case '2':
+            removeAluno(salaDeAula);
+            break;
+        case '3':
+            imprimeAluno(salaDeAula);
+            break;
+
+        default:
+            break;
+        }
+    } while (opcao != '4');
+}
